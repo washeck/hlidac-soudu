@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
-from typing import Iterator, List, Union
+from datetime import date, datetime
+from typing import List, Union
 from urllib.parse import parse_qs, urljoin, urlsplit
 
 import requests
@@ -12,7 +13,7 @@ INFOSOUD_URL = "https://infosoud.justice.cz/InfoSoud/public/"
 @dataclass
 class Udalost:
     nazev: str
-    datum: str
+    datum: date
     url: str = field(default="", compare=False, repr=False)
 
     @property
@@ -90,7 +91,8 @@ def parse_udalost(elem) -> Union[DilciRizeni, Udalost]:
         link = udalost.children("td:first-child > a")
         url = link.attr("href")
         typ = link.text()
-        datum = udalost.children("td:nth-child(2)").text()
+        datum_str = udalost.children("td:nth-child(2)").text()
+        datum = datetime.strptime(datum_str, "%d.%m.%Y").date()
         return Udalost(typ, datum, url)
 
 

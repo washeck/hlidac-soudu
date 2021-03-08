@@ -1,3 +1,4 @@
+from datetime import date
 from unittest import TestCase
 
 from hlidac import (
@@ -11,7 +12,7 @@ from hlidac import (
 
 
 class Test(TestCase):
-    def test_hlavni_rizeni_inet(self):
+    def test_hlavni_rizeni(self):
         with open("62-Nc-2528-2019.html") as f:
             rizeni = parse_rizeni(f.read())
 
@@ -23,9 +24,9 @@ class Test(TestCase):
                 stav_rizeni="Odškrtnutá - evidenčně ukončená věc (od 08.08.2019)",
                 predmet_rizeni="",
                 udalosti=[
-                    Udalost(nazev="Zahájení řízení", datum="08.03.2019"),
-                    Udalost(nazev="Vyřízení věci", datum="08.08.2019"),
-                    Udalost(nazev="Skončení věci", datum="08.08.2019"),
+                    Udalost(nazev="Zahájení řízení", datum=date(2019, 3, 8)),
+                    Udalost(nazev="Vyřízení věci", datum=date(2019, 8, 8)),
+                    Udalost(nazev="Skončení věci", datum=date(2019, 8, 8)),
                 ],
                 dilci_rizeni=[
                     DilciRizeni(spisova_znacka="12 P A NC 105 / 2019"),
@@ -45,13 +46,13 @@ class Test(TestCase):
                 soud="Městský soud Praha\xa0>\xa0Obvodní soud Praha 9",
                 stav_rizeni="Odškrtnutá - evidenčně ukončená věc (od 24.06.2019)",
                 udalosti=[
-                    Udalost(nazev="Zahájení řízení", datum="08.03.2019"),
-                    Udalost(nazev="Vydání rozhodnutí", datum="12.03.2019"),
-                    Udalost(nazev="Vyřízení věci", datum="12.03.2019"),
+                    Udalost(nazev="Zahájení řízení", datum=date(2019, 3, 8)),
+                    Udalost(nazev="Vydání rozhodnutí", datum=date(2019, 3, 12)),
+                    Udalost(nazev="Vyřízení věci", datum=date(2019, 3, 12)),
                     Udalost(
-                        nazev="Datum pravomocného ukončení věci", datum="07.05.2019"
+                        nazev="Datum pravomocného ukončení věci", datum=date(2019, 5, 7)
                     ),
-                    Udalost(nazev="Skončení věci", datum="24.06.2019"),
+                    Udalost(nazev="Skončení věci", datum=date(2019, 6, 24)),
                 ],
                 dilci_rizeni=[],
             ),
@@ -78,7 +79,7 @@ class Test(TestCase):
         with open("62-Nc-2528-2019.html") as f:
             rizeni = parse_rizeni(f.read())
         self.assertEqual(
-            rizeni.zahajeni, Udalost(nazev="Zahájení řízení", datum="08.03.2019")
+            rizeni.zahajeni, Udalost(nazev="Zahájení řízení", datum=date(2019, 3, 8))
         )
 
     def test_set_predmet_rizeni(self):
@@ -94,7 +95,7 @@ class TestUdalost(TestCase):
     def test_absolute_url(self):
         u = Udalost(
             nazev="",
-            datum="",
+            datum=date(2019, 1, 1),
             url="../public/list.do?query",
         )
         self.assertEqual(
@@ -105,7 +106,7 @@ class TestUdalost(TestCase):
     def test_druh(self):
         u = Udalost(
             nazev="",
-            datum="",
+            datum=date(2019, 1, 1),
             url="../public/list.do?druhVec=P A NC&rocnik=2019&cisloSenatu=12&bcVec=105&kraj=null&org=OSPHA09&poradiUdalosti=1&cisloSenatuLabel=12&typSoudu=os&agendaNc=null&druhUdalosti=ZAHAJ_RIZ&idUdalosti=null&druhVecId=P A NC&rocnikId=2019&cisloSenatuId=12&bcVecId=109&orgId=OSPHA09",
         )
         self.assertEqual(u.druh, "ZAHAJ_RIZ")
