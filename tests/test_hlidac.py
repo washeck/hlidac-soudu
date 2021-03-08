@@ -1,7 +1,8 @@
-from datetime import date
+from datetime import date, timedelta
 from unittest import TestCase
 
 from hlidac import (
+    DRUH_ZAHAJENI,
     DilciRizeni,
     Rizeni,
     Udalost,
@@ -82,6 +83,18 @@ class Test(TestCase):
             rizeni.zahajeni, Udalost(nazev="Zahájení řízení", datum=date(2019, 3, 8))
         )
 
+    def test_skonceni(self):
+        with open("62-Nc-2528-2019.html") as f:
+            rizeni = parse_rizeni(f.read())
+        self.assertEqual(
+            rizeni.skonceni, Udalost(nazev="Skončení věci", datum=date(2019, 8, 8))
+        )
+
+    def test_delka_rizeni(self):
+        with open("62-Nc-2528-2019.html") as f:
+            rizeni = parse_rizeni(f.read())
+        self.assertEqual(rizeni.delka_rizeni, timedelta(days=153))
+
     def test_set_predmet_rizeni(self):
         with open("62-Nc-2528-2019.html") as f:
             rizeni = parse_rizeni(f.read())
@@ -109,7 +122,7 @@ class TestUdalost(TestCase):
             datum=date(2019, 1, 1),
             url="../public/list.do?druhVec=P A NC&rocnik=2019&cisloSenatu=12&bcVec=105&kraj=null&org=OSPHA09&poradiUdalosti=1&cisloSenatuLabel=12&typSoudu=os&agendaNc=null&druhUdalosti=ZAHAJ_RIZ&idUdalosti=null&druhVecId=P A NC&rocnikId=2019&cisloSenatuId=12&bcVecId=109&orgId=OSPHA09",
         )
-        self.assertEqual(u.druh, "ZAHAJ_RIZ")
+        self.assertEqual(u.druh, DRUH_ZAHAJENI)
 
     def test_parse_predmet_rizeni(self):
         with open("62-Nc-2528-2019-ZAHAJ_RIZ.html") as f:

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from typing import List, Union
+from typing import List, Optional, Union
 from urllib.parse import parse_qs, urljoin, urlsplit
 
 import requests
@@ -8,6 +8,9 @@ from pyquery import PyQuery
 
 
 INFOSOUD_URL = "https://infosoud.justice.cz/InfoSoud/public/"
+
+DRUH_ZAHAJENI = "ZAHAJ_RIZ"
+DRUH_SKONCENI = "ST_VEC_ODS"
 
 
 @dataclass
@@ -44,10 +47,26 @@ class Rizeni:
         return list(filter(lambda x: x.druh == druh, self.udalosti))
 
     @property
-    def zahajeni(self):
-        udalosti = self.udalosti_podle_druhu("ZAHAJ_RIZ")
+    def zahajeni(self) -> Udalost:
+        udalosti = self.udalosti_podle_druhu(DRUH_ZAHAJENI)
         assert len(udalosti) == 1, "Ocekavano prave jedno zahajeni rizeni"
         return udalosti[0]
+
+    @property
+    def skonceni(self) -> Optional[Udalost]:
+        udalosti = self.udalosti_podle_druhu(DRUH_SKONCENI)
+        assert len(udalosti) <= 1, "Ocekavano maximalne jedno skonceni rizeni"
+        if udalosti:
+            return udalosti[0]
+        return None
+
+    @property
+    def delka_rizeni(self):
+        if self.skonceni:
+            konec = self.skonceni.datum
+        else:
+            konec = date.today()
+        return konec - self.zahajeni.datum
 
     def set_predmet_rizeni(self):
         response = requests.get(self.zahajeni.absolute_url)
