@@ -26,6 +26,11 @@ class PridatRizeniView(FormView):
             context_data["rizeni"] = rizeni
             return self.render_to_response(context_data)
 
-        Rizeni.objects.create(url=url, spisova_znacka=rizeni.spisova_znacka)
+        Rizeni.objects.create(
+            url=url,
+            spisova_znacka=rizeni.spisova_znacka,
+            zmena_ve_spisu=rizeni.posledni_zmena,
+            ukoncene=bool(rizeni.skonceni),
+        )
         messages.info(self.request, f"Řízení {rizeni.spisova_znacka} bylo přidáno")
         return HttpResponseRedirect(self.get_success_url())
