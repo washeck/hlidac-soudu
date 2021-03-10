@@ -1,33 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Přidat řízení</title>
-</head>
-<body>
+{% extends "hlidac/base.html" %}
 
-<form action="{% url 'pridat-rizeni' %}" method="post">
-    {% csrf_token %}
+{% block title %}Přidat nové řízení{% endblock %}
 
-    {% if rizeni %}
+{% block content %}
+<div class="bg-light p-5 rounded-lg m-3">
+    <h1 class="display-4">Přidat nové soudní řízení</h1>
+    <p class="lead">Zadejte adresu řízení ze systému <a href="https://infosoud.justice.cz">InfoSoud</a>
+        a Hlídač Vás upozorní pokaždé, když dojde ke změně ve spisu.
+    </p>
+    <hr class="my-4">
+
+    <form action="{% url 'pridat-rizeni' %}" method="post">
+        {% csrf_token %}
+
+        {% if rizeni %}
+            <p>
+                <b>Soud</b>: {{ rizeni.soud }}<br>
+                <b>Spisová značka</b>: {{ rizeni.spisova_znacka }}<br>
+                <b>Předmět řízení</b>: {{ rizeni.predmet_rizeni }}<br>
+                <b>Stav</b>: {{ rizeni.stav_rizeni }}<br>
+            </p>
+            <p><input type="submit" name="verified" value="Přidat toto řízení" class="btn btn-primary btn-lg"></p>
+
+            <h2>Něco nesedí?</h2>
+            <p>Ujistěte se, prosím, že zadáváte adresu stránky, na které vidíte Vaši spisovou značku a seznam
+                událostí v řízení</p>
+        {% endif %}
+
         <p>
-            <b>Soud</b>: {{ rizeni.soud }}<br>
-            <b>Spisová značka</b>: {{ rizeni.spisova_znacka }}<br>
-            <b>Předmět řízení</b>: {{ rizeni.predmet_rizeni }}<br>
-            <b>Stav</b>: {{ rizeni.stav_rizeni }}<br>
+            {{ form.url.errors }}
+            {{ form.url }}
         </p>
-        <input type="submit" name="verified" value="Přidat toto řízení">
-
-        <p>nebo zadat jinou adresu</p>
-    {% endif %}
-
-    <div class="fieldWrapper">
-        {{ form.url.errors }}
-        {{ form.url.label_tag }}
-        {{ form.url }}
-    </div>
-    <input type="submit" value="Načíst">
-</form>
-
-</body>
-</html>
+        <p><input type="submit" value="Načíst údaje z InfoSoud" class="btn btn-primary btn-lg"></p>
+    </form>
+</div>
+{% endblock %}

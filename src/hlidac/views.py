@@ -1,9 +1,13 @@
 from django.http import HttpResponseRedirect
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 
 from hlidac.forms import PridatRizeniForm
 from hlidac.models import Rizeni
 from parser import load_rizeni
+
+
+class IndexView(TemplateView):
+    template_name = "hlidac/index.html"
 
 
 class PridatRizeniView(FormView):
