@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views.generic import FormView, TemplateView
 
@@ -26,4 +27,5 @@ class PridatRizeniView(FormView):
             return self.render_to_response(context_data)
 
         Rizeni.objects.create(url=url, spisova_znacka=rizeni.spisova_znacka)
+        messages.info(self.request, f"Řízení {rizeni.spisova_znacka} bylo přidáno")
         return HttpResponseRedirect(self.get_success_url())
