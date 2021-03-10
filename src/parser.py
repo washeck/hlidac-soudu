@@ -121,3 +121,9 @@ def parse_predmet_rizeni(html):
     predmet_rizeni = content.text().split(":")
     assert predmet_rizeni[0].strip() == "Předmět řízení"
     return predmet_rizeni[1].strip()
+
+
+def load_rizeni(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    return parse_rizeni(response.text)

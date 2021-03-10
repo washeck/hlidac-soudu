@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Přidat řízení</title>
+</head>
+<body>
+
+<form action="{% url 'pridat-rizeni' %}" method="post">
+    {% csrf_token %}
+
+    {% if rizeni %}
+        <p>
+            <b>Soud</b>: {{ rizeni.soud }}<br>
+            <b>Spisová značka</b>: {{ rizeni.spisova_znacka }}<br>
+            <b>Předmět řízení</b>: {{ rizeni.predmet_rizeni }}<br>
+            <b>Stav</b>: {{ rizeni.stav_rizeni }}<br>
+        </p>
+        <input type="submit" name="verified" value="Přidat toto řízení">
+
+        <p>nebo zadat jinou adresu</p>
+    {% endif %}
+
+    <div class="fieldWrapper">
+        {{ form.url.errors }}
+        {{ form.url.label_tag }}
+        {{ form.url }}
+    </div>
+    <input type="submit" value="Načíst">
+</form>
+
+</body>
+</html>
