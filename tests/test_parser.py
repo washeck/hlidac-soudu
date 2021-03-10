@@ -1,3 +1,4 @@
+import datetime
 from datetime import date, timedelta
 from unittest import TestCase
 
@@ -33,6 +34,8 @@ class Test(TestCase):
                     DilciRizeni(spisova_znacka="12 P A NC 105 / 2019"),
                     DilciRizeni(spisova_znacka="12 P A NC 104 / 2019"),
                 ],
+                posledni_zmena=datetime.datetime(2019, 8, 8, 16, 46, 30),
+                cas_aktualizace=datetime.datetime(2021, 3, 8, 19, 50, 40),
             ),
         )
 
@@ -56,6 +59,8 @@ class Test(TestCase):
                     Udalost(nazev="Skončení věci", datum=date(2019, 6, 24)),
                 ],
                 dilci_rizeni=[],
+                posledni_zmena=datetime.datetime(2019, 6, 24, 12, 44, 54),
+                cas_aktualizace=datetime.datetime(2021, 3, 8, 19, 50, 40),
             ),
         )
 

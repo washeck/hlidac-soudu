@@ -42,6 +42,8 @@ class Rizeni:
     udalosti: List[Udalost] = field(default_factory=list)
     dilci_rizeni: List[DilciRizeni] = field(default_factory=list)
     predmet_rizeni: str = ""
+    posledni_zmena: Optional[datetime] = None
+    cas_aktualizace: Optional[datetime] = None
 
     def udalosti_podle_druhu(self, druh) -> List[Udalost]:
         return list(filter(lambda x: x.druh == druh, self.udalosti))
@@ -85,10 +87,16 @@ def parse_rizeni(html) -> Rizeni:
     stav = content.children("tr:nth-child(4) > td").text().split(":")[1].strip()
     prubeh = content.children("tr:nth-child(7) > td > table").children("tr")
 
+    parts = content.children("tr:nth-child(9) > td > table > tr > td:nth-child(2)").text().split()
+    posledni_zmena = datetime.strptime(f"{parts[0]} {parts[1]}", "%d.%m.%Y %H:%M:%S")
+    cas_aktualizace = datetime.strptime(f"{parts[2]} {parts[3]}", "%d.%m.%Y %H:%M:%S")
+
     rizeni = Rizeni(
         spisova_znacka=spisova_znacka,
         soud=soud,
         stav_rizeni=stav,
+        posledni_zmena=posledni_zmena,
+        cas_aktualizace=cas_aktualizace,
     )
 
     for polozka in prubeh[1:]:
