@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 from unittest import TestCase
 
-from hlidac import (
+from parser import (
     DRUH_ZAHAJENI,
     DilciRizeni,
     Rizeni,
