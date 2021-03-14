@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import List, Optional, Union
@@ -76,7 +77,15 @@ class Rizeni:
         self.predmet_rizeni = parse_predmet_rizeni(response.text)
 
 
+class SpisovaZnackaNeexistujeError(Exception):
+    pass
+
+
 def parse_rizeni(html) -> Rizeni:
+    neexituje_re = re.search(r"Hledaná spisová značka ([\w\s\/]+) neexistuje", html)
+    if neexituje_re:
+        raise SpisovaZnackaNeexistujeError(f"Spisová značka {neexituje_re.group(1)} neexistuje")
+
     query = PyQuery(html)
     prefix = "td.body > table > tr > td > table"
     content = query(prefix)

@@ -6,7 +6,7 @@ from parser import (
     DRUH_ZAHAJENI,
     DilciRizeni,
     Rizeni,
-    Udalost,
+    SpisovaZnackaNeexistujeError, Udalost,
     parse_predmet_rizeni,
     parse_rizeni,
     parse_udalost,
@@ -38,6 +38,13 @@ class Test(TestCase):
                 cas_aktualizace=datetime.datetime(2021, 3, 8, 19, 50, 40),
             ),
         )
+
+    def test_neexistujici_rizeni(self):
+        with open("neexistuje.html") as f:
+            html = f.read()
+
+        with self.assertRaisesRegex(SpisovaZnackaNeexistujeError, "Spisová značka 62 NC 1/2019 neexistuje"):
+            parse_rizeni(html)
 
     def test_parse_dilci_rizeni(self):
         with open("12-P-A-NC-105.html") as f:
