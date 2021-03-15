@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.utils.timezone import make_aware
 from django.views.generic import FormView, TemplateView
 
 from hlidac.forms import PridatRizeniForm
@@ -34,7 +35,7 @@ class PridatRizeniView(FormView):
             url=url,
             spisova_znacka=rizeni.spisova_znacka,
             predmet=rizeni.predmet_rizeni,
-            zmena_ve_spisu=rizeni.posledni_zmena,
+            zmena_ve_spisu=make_aware(rizeni.posledni_zmena),
             ukoncene=bool(rizeni.skonceni),
         )
         messages.info(self.request, f"Řízení {rizeni.spisova_znacka} bylo přidáno")
