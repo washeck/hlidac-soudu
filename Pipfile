@@ -9,6 +9,7 @@ black = "==20.8b1"
 requests = "*"
 responses = "*"
 django = "==3.2b1"
+django-extensions = "*"
 
 [dev-packages]
 
