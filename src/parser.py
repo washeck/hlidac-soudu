@@ -12,6 +12,7 @@ INFOSOUD_URL = "https://infosoud.justice.cz/InfoSoud/public/"
 
 DRUH_ZAHAJENI = "ZAHAJ_RIZ"
 DRUH_SKONCENI = "ST_VEC_ODS"
+DRUH_ODVOLANI = "ODVOLANI"
 
 
 @dataclass
@@ -70,6 +71,10 @@ class Rizeni:
         else:
             konec = date.today()
         return konec - self.zahajeni.datum
+
+    @property
+    def probehlo_odvolani(self):
+        return bool(self.udalosti_podle_druhu(DRUH_ODVOLANI))
 
     def set_predmet_rizeni(self):
         response = requests.get(self.zahajeni.absolute_url)

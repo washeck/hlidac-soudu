@@ -11,6 +11,8 @@ class Rizeni(models.Model):
     ukoncene = models.BooleanField()
     datum_zahajeni = models.DateField()
     datum_skonceni = models.DateField(null=True, blank=True)
+    probehlo_odvolani = models.BooleanField(null=True, blank=True)
+    soud = models.CharField(max_length=100)
 
     def __str__(self):
         return self.spisova_znacka

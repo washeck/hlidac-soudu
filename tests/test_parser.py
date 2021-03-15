@@ -109,6 +109,14 @@ class Test(TestCase):
             rizeni.predmet_rizeni, "Svěření do péče a určení výživného (včetně změn)"
         )
 
+    def test_probehlo_odvolani__false(self):
+        rizeni = load_from_file("62-Nc-2528-2019.html")
+        self.assertFalse(rizeni.probehlo_odvolani)
+
+    def test_probehlo_odvolani__true(self):
+        rizeni = load_from_file("62-Nc-2503-2019.html")
+        self.assertTrue(rizeni.probehlo_odvolani)
+
 
 class TestUdalost(TestCase):
     def test_absolute_url(self):
