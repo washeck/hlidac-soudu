@@ -34,6 +34,7 @@ class PridatRizeniView(FormView):
         Rizeni.objects.create(
             url=url,
             spisova_znacka=rizeni.spisova_znacka,
+            predmet=rizeni.predmet_rizeni,
             zmena_ve_spisu=rizeni.posledni_zmena,
             ukoncene=bool(rizeni.skonceni),
         )

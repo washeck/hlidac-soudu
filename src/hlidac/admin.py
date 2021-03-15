@@ -4,7 +4,8 @@ from hlidac.models import Rizeni
 
 
 class RizeniAdmin(admin.ModelAdmin):
-    list_display = ["spisova_znacka", "ukoncene", "zmena_ve_spisu"]
+    list_display = ["spisova_znacka", "predmet", "ukoncene", "zmena_ve_spisu"]
+    list_filter = ["ukoncene", "predmet"]
 
 
 admin.site.register(Rizeni, RizeniAdmin)
