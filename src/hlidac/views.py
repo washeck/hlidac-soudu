@@ -31,12 +31,18 @@ class PridatRizeniView(FormView):
             context_data["rizeni"] = rizeni
             return self.render_to_response(context_data)
 
+        if rizeni.skonceni:
+            datum_skonceni = rizeni.skonceni.datum
+        else:
+            datum_skonceni = None
+
         Rizeni.objects.create(
             url=url,
             spisova_znacka=rizeni.spisova_znacka,
             predmet=rizeni.predmet_rizeni,
             zmena_ve_spisu=make_aware(rizeni.posledni_zmena),
-            ukoncene=bool(rizeni.skonceni),
+            datum_zahajeni=rizeni.zahajeni.datum,
+            datum_skonceni=datum_skonceni,
         )
         messages.info(self.request, f"Řízení {rizeni.spisova_znacka} bylo přidáno")
         return HttpResponseRedirect(self.get_success_url())
