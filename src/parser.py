@@ -84,7 +84,9 @@ class SpisovaZnackaNeexistujeError(Exception):
 def parse_rizeni(html) -> Rizeni:
     neexituje_re = re.search(r"Hledaná spisová značka ([\w\s\/]+) neexistuje", html)
     if neexituje_re:
-        raise SpisovaZnackaNeexistujeError(f"Spisová značka {neexituje_re.group(1)} neexistuje")
+        raise SpisovaZnackaNeexistujeError(
+            f"Spisová značka {neexituje_re.group(1)} neexistuje"
+        )
 
     query = PyQuery(html)
     prefix = "td.body > table > tr > td > table"
@@ -96,7 +98,11 @@ def parse_rizeni(html) -> Rizeni:
     stav = content.children("tr:nth-child(4) > td").text().split(":")[1].strip()
     prubeh = content.children("tr:nth-child(7) > td > table").children("tr")
 
-    parts = content.children("tr:nth-child(9) > td > table > tr > td:nth-child(2)").text().split()
+    parts = (
+        content.children("tr:nth-child(9) > td > table > tr > td:nth-child(2)")
+        .text()
+        .split()
+    )
     posledni_zmena = datetime.strptime(f"{parts[0]} {parts[1]}", "%d.%m.%Y %H:%M:%S")
     cas_aktualizace = datetime.strptime(f"{parts[2]} {parts[3]}", "%d.%m.%Y %H:%M:%S")
 
@@ -140,7 +146,12 @@ def parse_predmet_rizeni(html):
     return predmet_rizeni[1].strip()
 
 
-def load_rizeni(url):
+def load_from_url(url) -> Rizeni:
     response = requests.get(url)
     response.raise_for_status()
     return parse_rizeni(response.text)
+
+
+def load_from_file(filename) -> Rizeni:
+    with open(filename) as f:
+        return parse_rizeni(f.read())

@@ -6,17 +6,17 @@ from parser import (
     DRUH_ZAHAJENI,
     DilciRizeni,
     Rizeni,
-    SpisovaZnackaNeexistujeError, Udalost,
+    SpisovaZnackaNeexistujeError,
+    Udalost,
+    load_from_file,
     parse_predmet_rizeni,
-    parse_rizeni,
     parse_udalost,
 )
 
 
 class Test(TestCase):
     def test_hlavni_rizeni(self):
-        with open("62-Nc-2528-2019.html") as f:
-            rizeni = parse_rizeni(f.read())
+        rizeni = load_from_file("62-Nc-2528-2019.html")
 
         self.assertEqual(
             rizeni,
@@ -40,15 +40,13 @@ class Test(TestCase):
         )
 
     def test_neexistujici_rizeni(self):
-        with open("neexistuje.html") as f:
-            html = f.read()
-
-        with self.assertRaisesRegex(SpisovaZnackaNeexistujeError, "Spisová značka 62 NC 1/2019 neexistuje"):
-            parse_rizeni(html)
+        with self.assertRaisesRegex(
+            SpisovaZnackaNeexistujeError, "Spisová značka 62 NC 1/2019 neexistuje"
+        ):
+            load_from_file("neexistuje.html")
 
     def test_parse_dilci_rizeni(self):
-        with open("12-P-A-NC-105.html") as f:
-            rizeni = parse_rizeni(f.read())
+        rizeni = load_from_file("12-P-A-NC-105.html")
 
         self.assertEqual(
             rizeni,
@@ -89,27 +87,23 @@ class Test(TestCase):
         )
 
     def test_zahajeni(self):
-        with open("62-Nc-2528-2019.html") as f:
-            rizeni = parse_rizeni(f.read())
+        rizeni = load_from_file("62-Nc-2528-2019.html")
         self.assertEqual(
             rizeni.zahajeni, Udalost(nazev="Zahájení řízení", datum=date(2019, 3, 8))
         )
 
     def test_skonceni(self):
-        with open("62-Nc-2528-2019.html") as f:
-            rizeni = parse_rizeni(f.read())
+        rizeni = load_from_file("62-Nc-2528-2019.html")
         self.assertEqual(
             rizeni.skonceni, Udalost(nazev="Skončení věci", datum=date(2019, 8, 8))
         )
 
     def test_delka_rizeni(self):
-        with open("62-Nc-2528-2019.html") as f:
-            rizeni = parse_rizeni(f.read())
+        rizeni = load_from_file("62-Nc-2528-2019.html")
         self.assertEqual(rizeni.delka_rizeni, timedelta(days=153))
 
     def test_set_predmet_rizeni(self):
-        with open("62-Nc-2528-2019.html") as f:
-            rizeni = parse_rizeni(f.read())
+        rizeni = load_from_file("62-Nc-2528-2019.html")
         rizeni.set_predmet_rizeni()
         self.assertEqual(
             rizeni.predmet_rizeni, "Svěření do péče a určení výživného (včetně změn)"

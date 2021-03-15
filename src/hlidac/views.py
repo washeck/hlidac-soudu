@@ -1,11 +1,10 @@
 from django.contrib import messages
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.views.generic import FormView, TemplateView
 
 from hlidac.forms import PridatRizeniForm
 from hlidac.models import Rizeni
-from parser import SpisovaZnackaNeexistujeError, load_rizeni
+from parser import SpisovaZnackaNeexistujeError, load_from_url
 
 
 class IndexView(TemplateView):
@@ -20,7 +19,7 @@ class PridatRizeniView(FormView):
     def form_valid(self, form):
         url = form.cleaned_data["url"]
         try:
-            rizeni = load_rizeni(url)
+            rizeni = load_from_url(url)
             rizeni.set_predmet_rizeni()
         except SpisovaZnackaNeexistujeError as e:
             form.add_error("url", str(e))
