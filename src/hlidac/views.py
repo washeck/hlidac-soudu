@@ -5,7 +5,7 @@ from django.views.generic import FormView, TemplateView
 
 from hlidac.forms import PridatRizeniForm
 from hlidac.models import Rizeni
-from parser import SpisovaZnackaNeexistujeError, load_from_url
+from hlidac.parser import SpisovaZnackaNeexistujeError, load_from_url
 
 
 class IndexView(TemplateView):

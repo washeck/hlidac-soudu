@@ -1,8 +1,10 @@
 import datetime
+import os
 from datetime import date, timedelta
+from pathlib import Path
 from unittest import TestCase
 
-from parser import (
+from hlidac.parser import (
     DRUH_ZAHAJENI,
     DilciRizeni,
     Rizeni,
@@ -13,10 +15,12 @@ from parser import (
     parse_udalost,
 )
 
+testdata_dir = Path(__file__).parent / "testdata"
+
 
 class Test(TestCase):
     def test_hlavni_rizeni(self):
-        rizeni = load_from_file("62-Nc-2528-2019.html")
+        rizeni = load_from_file(testdata_dir / "62-Nc-2528-2019.html")
 
         self.assertEqual(
             rizeni,
@@ -43,10 +47,10 @@ class Test(TestCase):
         with self.assertRaisesRegex(
             SpisovaZnackaNeexistujeError, "Spisová značka 62 NC 1/2019 neexistuje"
         ):
-            load_from_file("neexistuje.html")
+            load_from_file(testdata_dir / "neexistuje.html")
 
     def test_parse_dilci_rizeni(self):
-        rizeni = load_from_file("12-P-A-NC-105.html")
+        rizeni = load_from_file(testdata_dir / "12-P-A-NC-105.html")
 
         self.assertEqual(
             rizeni,
@@ -87,34 +91,34 @@ class Test(TestCase):
         )
 
     def test_zahajeni(self):
-        rizeni = load_from_file("62-Nc-2528-2019.html")
+        rizeni = load_from_file(testdata_dir / "62-Nc-2528-2019.html")
         self.assertEqual(
             rizeni.zahajeni, Udalost(nazev="Zahájení řízení", datum=date(2019, 3, 8))
         )
 
     def test_skonceni(self):
-        rizeni = load_from_file("62-Nc-2528-2019.html")
+        rizeni = load_from_file(testdata_dir / "62-Nc-2528-2019.html")
         self.assertEqual(
             rizeni.skonceni, Udalost(nazev="Skončení věci", datum=date(2019, 8, 8))
         )
 
     def test_delka_rizeni(self):
-        rizeni = load_from_file("62-Nc-2528-2019.html")
+        rizeni = load_from_file(testdata_dir / "62-Nc-2528-2019.html")
         self.assertEqual(rizeni.delka_rizeni, timedelta(days=153))
 
     def test_set_predmet_rizeni(self):
-        rizeni = load_from_file("62-Nc-2528-2019.html")
+        rizeni = load_from_file(testdata_dir / "62-Nc-2528-2019.html")
         rizeni.set_predmet_rizeni()
         self.assertEqual(
             rizeni.predmet_rizeni, "Svěření do péče a určení výživného (včetně změn)"
         )
 
     def test_probehlo_odvolani__false(self):
-        rizeni = load_from_file("62-Nc-2528-2019.html")
+        rizeni = load_from_file(testdata_dir / "62-Nc-2528-2019.html")
         self.assertFalse(rizeni.probehlo_odvolani)
 
     def test_probehlo_odvolani__true(self):
-        rizeni = load_from_file("62-Nc-2503-2019.html")
+        rizeni = load_from_file(testdata_dir / "62-Nc-2503-2019.html")
         self.assertTrue(rizeni.probehlo_odvolani)
 
 
@@ -139,7 +143,7 @@ class TestUdalost(TestCase):
         self.assertEqual(u.druh, DRUH_ZAHAJENI)
 
     def test_parse_predmet_rizeni(self):
-        with open("62-Nc-2528-2019-ZAHAJ_RIZ.html") as f:
+        with open(testdata_dir / "62-Nc-2528-2019-ZAHAJ_RIZ.html") as f:
             self.assertEqual(
                 parse_predmet_rizeni(f.read()),
                 "Svěření do péče a určení výživného (včetně změn)",
